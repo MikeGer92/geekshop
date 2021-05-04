@@ -24,6 +24,7 @@ from django.conf.urls import include
 urlpatterns = [
     path('', index, name='index'),
     path('products/', include('mainapp.urls', namespace='products')),
+    path('users/', include('authapp.urls', namespace='users')),
     path('test_context/', test_context, name='test_context'),
     path('grappelli/', include('grappelli.urls')),  # grappelli URLS
     path('admin/', admin.site.urls),  # admin site
