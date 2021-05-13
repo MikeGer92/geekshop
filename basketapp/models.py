@@ -14,4 +14,7 @@ class Basket(models.Model):
 
 
     def sum(self):
-        return self.quantity * self.product.price
+        res = self.quantity * self.product.price
+        return res
+
+
