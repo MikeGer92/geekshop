@@ -28,6 +28,7 @@ urlpatterns = [
     path('test_context/', test_context, name='test_context'),
     path('grappelli/', include('grappelli.urls')),  # grappelli URLS
     path('admin/', admin.site.urls),  # admin site
+    path('baskets/', include('basketapp.urls', namespace='baskets')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
