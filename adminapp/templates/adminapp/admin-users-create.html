@@ -1,7 +1,7 @@
 {% extends 'adminapp/base.html' %}
 
 {% block content %}
-     <h1 class="mt-4">Создание пользователя</h1>
+     <h1 class="mt-4">{{ header }} </h1>
          <form action="{% url 'admin_staff:admin_users_create'%}" method="post" enctype="multipart/form-data">
              {% csrf_token %}
              <div class="form-row">
