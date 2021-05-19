@@ -41,9 +41,13 @@ def admin_users_update(request, user_id):
 
 def admin_users_remove(request, user_id):
     user = User.objects.get(id=user_id)
-    user.is_active = False
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
     user.save()
     # user.delete() если нужно удалить
     return HttpResponseRedirect(reverse('admin_staff:admin_users_read'))
+
 
 
