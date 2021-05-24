@@ -1,3 +1,9 @@
 body {
     padding-top: 56px;
+
+    div.empty_product {
+        font-size: 26px;
+        color:aqua;
+        margin-bottom: 30px;
+    }
 }
