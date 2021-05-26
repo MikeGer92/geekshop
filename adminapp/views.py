@@ -64,6 +64,14 @@ class UserUpdateView(UpdateView):
     success_url = reverse_lazy('admin_staff:admin_users_read')
     form_class = UserAdminProfileForm
 
+    def get_context_data(self, **kwargs):
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context.update({'header': 'Редактирование пользователя'})
+        return context
+
+
+        
+
 
 class UserDeleteView(DeleteView):
     model = User
