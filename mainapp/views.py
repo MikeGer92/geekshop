@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from mainapp.models import ProductCategory, Product
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -9,18 +10,25 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
-def products(request, category_id=None):
+def products(request, category_id=None, page=1):
     context = {'title': 'GeekShop - Каталог', 'categories': ProductCategory.objects.all()}
 
     if category_id:
         products = Product.objects.filter(category_id=category_id)
-        if len(products)>0:
-            context.update({'products': products})
-        else:
-            context.update({'message': 'В данной категории товаров нет!'})
-
     else:
-        context.update({'products': Product.objects.all()})
+        products = Product.objects.all()
+
+    if len(products)>0:
+        paginator = Paginator(products, per_page=3)
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
+        context.update({'products': products_paginator})
+    else:
+        context.update({'message': 'В данной категории товаров нет!'})
 
     return render(request, 'mainapp/products.html', context)
 
