@@ -8,22 +8,19 @@ from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
 # Create your views here.
 
-
 @user_passes_test(lambda u: u.is_superuser)
 def index(request):
     return render(request, 'adminapp/admin.html')
-
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_read(request):
 #     context = {'header': 'Пользователи', 'users': User.objects.all()}
 #     return render(request, 'adminapp/admin-users-read.html', context)
 
+
 class UserListView(ListView):
     model = User
     template_name = 'adminapp/admin-users-read.html'
-
-
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_create(request):
@@ -47,9 +44,6 @@ class UserCreateView(CreateView):
     form_class = UserAdminRegisterForm
     success_url = reverse_lazy('admin_staff:admin_users_read')
 
-
-
-
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_update(request, user_id):
 #     selected_user = User.objects.get(id=user_id)
@@ -63,6 +57,7 @@ class UserCreateView(CreateView):
 #     context = {'header': 'Редактирование пользователя','form': form, 'selected_user': selected_user}
 #     return render(request, 'adminapp/admin-users-update-delete.html', context)
 
+
 class UserUpdateView(UpdateView):
     model = User
     template_name = 'adminapp/admin-users-update-delete.html'
@@ -75,17 +70,26 @@ class UserDeleteView(DeleteView):
     emplate_name = 'adminapp/admin-users-update-delete.html'
     success_url = reverse_lazy('admin_staff:admin_users_read')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
+        return HttpResponseRedirect(reverse('admin_staff:admin_users_read'))
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_remove(request, user_id):
-    user = User.objects.get(id=user_id)
-    if user.is_active:
-        user.is_active = False
-    else:
-        user.is_active = True
-    user.save()
-    # user.delete() если нужно удалить
-    return HttpResponseRedirect(reverse('admin_staff:admin_users_read'))
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_users_remove(request, user_id):
+#     user = User.objects.get(id=user_id)
+#     if user.is_active:
+#         user.is_active = False
+#     else:
+#         user.is_active = True
+#     user.save()
+#     # user.delete() если нужно удалить
+#     return HttpResponseRedirect(reverse('admin_staff:admin_users_read'))
 
 
 
