@@ -3,6 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils.decorators import method_decorator
 from authapp.models import User
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
@@ -21,6 +22,10 @@ def index(request):
 class UserListView(ListView):
     model = User
     template_name = 'adminapp/admin-users-read.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_create(request):
@@ -43,6 +48,10 @@ class UserCreateView(CreateView):
     template_name = 'adminapp/admin-users-create.html'
     form_class = UserAdminRegisterForm
     success_url = reverse_lazy('admin_staff:admin_users_read')
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserCreateView, self).dispatch(request, *args, **kwargs)
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_update(request, user_id):
@@ -69,8 +78,9 @@ class UserUpdateView(UpdateView):
         context.update({'header': 'Редактирование пользователя'})
         return context
 
-
-        
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserUpdateView, self).dispatch(request, *args, **kwargs)
 
 
 class UserDeleteView(DeleteView):
@@ -87,6 +97,10 @@ class UserDeleteView(DeleteView):
             self.object.is_active = True
         self.object.save()
         return HttpResponseRedirect(reverse('admin_staff:admin_users_read'))
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserDeleteView, self).dispatch(request, *args, **kwargs)
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_users_remove(request, user_id):
