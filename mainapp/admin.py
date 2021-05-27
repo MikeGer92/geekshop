@@ -1,5 +1,6 @@
 from django.contrib import admin
 from mainapp.models import ProductCategory, Product
+from authapp.models import User
 
 # Register your models here.
 admin.site.register(ProductCategory)
@@ -13,3 +14,6 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('description', )
     ordering = ('-price',)  # сортировка от я до а: добавляется знак "-"#
     search_fields = ('name',)
+
+
+
